@@ -2,13 +2,12 @@ const fs = require("fs");
 const path = require("path");
 const { ensureDirectoryExists } = require("../utils/fileUtils");
 
-// Cria pasta de logs se não existir
 const logDir = path.join(__dirname, "../../logs");
 ensureDirectoryExists(logDir);
 
 const logStream = fs.createWriteStream(
   path.join(logDir, `app-${new Date().toISOString().split("T")[0]}.log`),
-  { flags: "a" } // 'a' para append (adicionar ao arquivo existente)
+  { flags: "a" }
 );
 
 const logger = {

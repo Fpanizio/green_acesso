@@ -9,6 +9,22 @@ router.get('/boletos', async (req, res) => {
   logger.info("Recebendo requisição para listar boletos.");
   try {
     const { nome, valor_inicial, valor_final, id_lote } = req.query;
+
+    if (valor_inicial && isNaN(parseFloat(valor_inicial))) {
+      logger.warn("Parâmetro valor_inicial inválido.");
+      return res.status(400).json({ error: "Parâmetro valor_inicial deve ser numérico." });
+    }
+
+    if (valor_final && isNaN(parseFloat(valor_final))) {
+      logger.warn("Parâmetro valor_final inválido.");
+      return res.status(400).json({ error: "Parâmetro valor_final deve ser numérico." });
+    }
+
+    if (id_lote && isNaN(parseInt(id_lote))) {
+      logger.warn("Parâmetro id_lote inválido.");
+      return res.status(400).json({ error: "Parâmetro id_lote deve ser numérico." });
+    }
+
     const where = {};
 
     // Filtro por nome (case-insensitive)

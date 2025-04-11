@@ -19,7 +19,30 @@ router.post("/importar-csv", upload.single("csv"), async (req, res) => {
 
   fs.createReadStream(req.file.path)
     .pipe(csvParser({ separator: ";" }))
-    .on("data", (data) => results.push(data))
+    .on("data", (data) => {
+      if (!data.nome || !data.unidade || !data.valor || !data.linha_digitavel) {
+        const errorMsg = `Linha inválida no CSV: ${JSON.stringify(data)}`;
+        logger.warn(errorMsg);
+        errors.push(errorMsg);
+        return;
+      }
+
+      if (isNaN(parseFloat(data.valor))) {
+        const errorMsg = `Valor inválido na linha: ${JSON.stringify(data)}`;
+        logger.warn(errorMsg);
+        errors.push(errorMsg);
+        return;
+      }
+
+      if (results.some((item) => item.linha_digitavel === data.linha_digitavel)) {
+        const errorMsg = `Linha duplicada no CSV: ${data.linha_digitavel}`;
+        logger.warn(errorMsg);
+        errors.push(errorMsg);
+        return;
+      }
+
+      results.push(data);
+    })
     .on("end", async () => {
       logger.info(`Processando ${results.length} registros do CSV.`);
       const boletosProcessados = [];

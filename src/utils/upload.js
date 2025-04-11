@@ -18,5 +18,17 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ 
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ["text/csv", "application/pdf"];
+    if (!allowedTypes.includes(file.mimetype)) {
+      logger.warn(`Tipo de arquivo não permitido: ${file.mimetype}`);
+      return cb(new Error("Apenas arquivos CSV e PDF são permitidos."));
+    }
+    cb(null, true);
+  },
+  limits: { fileSize: 10 * 1024 * 1024 } // Limite de 10MB
+});
+
 module.exports = upload;

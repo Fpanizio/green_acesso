@@ -8,15 +8,26 @@ const Boleto = sequelize.define(
     nome_sacado: {
       type: DataTypes.STRING(255),
       allowNull: false,
+      validate: {
+        notEmpty: { msg: "O nome do sacado não pode ser vazio." },
+      },
     },
     valor: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
+      validate: {
+        isDecimal: { msg: "O valor deve ser um número decimal válido." },
+      },
     },
     linha_digitavel: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: true,
+      unique: {
+        msg: "A linha digitável deve ser única."
+      },
+      validate: {
+        notEmpty: { msg: "A linha digitável não pode ser vazia." },
+      },
     },
     ativo: {
       type: DataTypes.BOOLEAN,
