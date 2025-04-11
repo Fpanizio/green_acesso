@@ -27,14 +27,16 @@ router.post("/importar-csv", upload.single("csv"), async (req, res) => {
         return;
       }
 
-      if (isNaN(parseFloat(data.valor))) {
+      if (isNaN(parseFloat(data.valor)) || parseFloat(data.valor) <= 0) {
         const errorMsg = `Valor inválido na linha: ${JSON.stringify(data)}`;
         logger.warn(errorMsg);
         errors.push(errorMsg);
         return;
       }
 
-      if (results.some((item) => item.linha_digitavel === data.linha_digitavel)) {
+      if (
+        results.some((item) => item.linha_digitavel === data.linha_digitavel)
+      ) {
         const errorMsg = `Linha duplicada no CSV: ${data.linha_digitavel}`;
         logger.warn(errorMsg);
         errors.push(errorMsg);
@@ -49,36 +51,6 @@ router.post("/importar-csv", upload.single("csv"), async (req, res) => {
 
       for (const item of results) {
         try {
-          if (
-            !item.nome ||
-            !item.unidade ||
-            !item.valor ||
-            !item.linha_digitavel
-          ) {
-            const errorMsg = `Dados incompletos para a unidade: ${item.unidade}`;
-            logger.warn(errorMsg);
-            errors.push(errorMsg);
-            continue;
-          }
-
-          if (isNaN(parseFloat(item.valor))) {
-            const errorMsg = `Valor inválido para a unidade: ${item.unidade}`;
-            logger.warn(errorMsg);
-            errors.push(errorMsg);
-            continue;
-          }
-
-          const boletoExistente = await Boleto.findOne({
-            where: { linha_digitavel: item.linha_digitavel },
-          });
-
-          if (boletoExistente) {
-            const errorMsg = `Boleto já existe (linha digitável: ${item.linha_digitavel}) (valor: ${item.valor})`;
-            logger.warn(errorMsg);
-            errors.push(errorMsg);
-            continue;
-          }
-
           const unidadeFormatada = item.unidade.padStart(4, "0");
           const lote = await Lote.findOne({
             where: { nome: unidadeFormatada },
@@ -110,7 +82,9 @@ router.post("/importar-csv", upload.single("csv"), async (req, res) => {
           await Boleto.bulkCreate(boletosProcessados, {
             ignoreDuplicates: true,
           });
-          logger.info(`${boletosProcessados.length} boletos importados com sucesso.`);
+          logger.info(
+            `${boletosProcessados.length} boletos importados com sucesso.`
+          );
         } catch (error) {
           const errorMsg = `Erro ao salvar boletos no banco: ${error.message}`;
           logger.error(errorMsg, error);

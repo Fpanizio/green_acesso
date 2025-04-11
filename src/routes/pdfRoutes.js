@@ -12,8 +12,8 @@ const logger = require("../config/logger");
 router.post("/processar-pdf", upload.single("pdf"), async (req, res) => {
   logger.info("Recebendo requisição para processar PDF.");
   if (!req.file) {
-    logger.warn("Nenhum PDF enviado.");
-    return res.status(400).json({ error: "Nenhum PDF enviado." });
+    logger.warn("Nenhum arquivo PDF enviado.");
+    return res.status(400).json({ error: "Nenhum arquivo PDF enviado." });
   }
 
   try {
@@ -26,6 +26,11 @@ router.post("/processar-pdf", upload.single("pdf"), async (req, res) => {
 
     const data = await PdfParse(pdfBuffer);
     const nomes = data.text.split("\n").filter((nome) => nome.trim() !== "");
+
+    if (nomes.length === 0) {
+      logger.warn("Nenhum nome encontrado no PDF.");
+      return res.status(400).json({ error: "Nenhum nome encontrado no PDF." });
+    }
 
     const boletos = await Boleto.findAll();
     const nomeParaId = {};
@@ -40,14 +45,6 @@ router.post("/processar-pdf", upload.single("pdf"), async (req, res) => {
     const pages = pdfDoc.getPages();
 
     if (pages.length !== nomes.length) {
-      const errorMsg = "Número de páginas não corresponde aos nomes extraídos.";
-      logger.warn(errorMsg);
-      return res.status(400).json({
-        error: errorMsg,
-      });
-    }
-
-    if (nomes.length !== pages.length) {
       const errorMsg =
         "Número de páginas no PDF não corresponde ao número de nomes extraídos.";
       logger.warn(errorMsg);
@@ -68,7 +65,8 @@ router.post("/processar-pdf", upload.single("pdf"), async (req, res) => {
       newPdfDoc.addPage(copiedPage);
 
       const newPdfBytes = await newPdfDoc.save();
-      fs.writeFileSync(path.join(boletosDir, `${idBoleto}.pdf`), newPdfBytes);
+      const outputPath = path.join(boletosDir, `${idBoleto}.pdf`);
+      fs.writeFileSync(outputPath, newPdfBytes);
       logger.info(`PDF gerado para o boleto ID: ${idBoleto}`);
     }
 
