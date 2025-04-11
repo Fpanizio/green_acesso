@@ -88,11 +88,16 @@ router.get("/relatorio", async (req, res) => {
 
       fileStream.on("finish", () => {
         logger.info(`Relatório gerado com sucesso: ${filename}`);
+
+        // Lê o arquivo gerado e converte para base64
+        const pdfBase64 = fs.readFileSync(filePath, { encoding: "base64" });
+
+        logger.info("Retornando relatório em base64.");
         res.json({
           success: true,
           message: "Relatório gerado com sucesso",
-          path: filePath,
           filename: filename,
+          base64: pdfBase64,
         });
       });
 
