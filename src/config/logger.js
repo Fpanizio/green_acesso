@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { ensureDirectoryExists } = require("../utils/fileUtils");
+const { ensureDirectoryExists } = require("../utils/directoryUtils");
 
 const logDir = path.join(__dirname, "../../logs");
 ensureDirectoryExists(logDir);
