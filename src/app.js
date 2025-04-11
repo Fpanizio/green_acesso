@@ -5,7 +5,7 @@ const csvRoutes = require("./routes/csvRoutes");
 const pdfRoutes = require("./routes/pdfRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const boletoRoutes = require("./routes/boletoRoute");
-const Lote = require("./models/Lote"); // Assuming Lote model is defined
+const Lote = require("./models/Lote");
 
 const app = express();
 
