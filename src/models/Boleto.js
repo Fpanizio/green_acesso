@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+const { sequelize } = require("../config/database");
 const logger = require("../config/logger");
 
 const Boleto = sequelize.define(
@@ -23,7 +23,7 @@ const Boleto = sequelize.define(
       type: DataTypes.STRING(255),
       allowNull: false,
       unique: {
-        msg: "A linha digitável deve ser única."
+        msg: "A linha digitável deve ser única.",
       },
       validate: {
         notEmpty: { msg: "A linha digitável não pode ser vazia." },

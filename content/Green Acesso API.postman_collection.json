@@ -1,0 +1,83 @@
+{
+	"info": {
+		"_postman_id": "b08823bc-302a-464c-87bf-d8774c926f70",
+		"name": "Green Acesso API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "20854740"
+	},
+	"item": [
+		{
+			"name": "importar CSV",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "csv",
+							"type": "file",
+							"src": "/C:/Users/fpani/OneDrive/Documents/Programming/Back-end/green_acesso/content/test.csv"
+						}
+					]
+				},
+				"url": "http://localhost:3000/api/importar-csv"
+			},
+			"response": []
+		},
+		{
+			"name": "Processar PDF",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "pdf",
+							"type": "file",
+							"src": "/C:/Users/fpani/OneDrive/Documents/Programming/Back-end/green_acesso/content/boletos-test.pdf"
+						}
+					]
+				},
+				"url": "http://localhost:3000/api/processar-pdf"
+			},
+			"response": []
+		},
+		{
+			"name": "Gerar Relatorio",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/relatorio?relatorio=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"relatorio"
+					],
+					"query": [
+						{
+							"key": "relatorio",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Boletos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3000/api/boletos"
+			},
+			"response": []
+		}
+	]
+}

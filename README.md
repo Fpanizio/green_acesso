@@ -2,6 +2,10 @@
 
 Backend Node.js para importação/exportação de boletos em CSV e PDF, desenvolvido para o teste técnico da Green Acesso.
 
+## 🎯 Objetivo do Projeto
+
+Este projeto foi desenvolvido como parte do desafio técnico da Green Acesso. Ele tem como objetivo importar boletos de um sistema financeiro em formato `.csv` e `.pdf`, processá-los e exportar relatórios em PDF, integrando os dados ao sistema de portaria.
+
 ## 🚀 Tecnologias
 
 - **Node.js** (v18+)
@@ -13,6 +17,7 @@ Backend Node.js para importação/exportação de boletos em CSV e PDF, desenvol
 - **pdf-lib**: Manipulação de PDFs
 - **csv-parser**: Processamento de arquivos CSV
 - **multer**: Upload de arquivos
+- **pdfkit**: Geração de PDFs
 
 ## ⚙️ Configuração
 
@@ -53,6 +58,7 @@ O servidor estará disponível em: [http://localhost:3000](http://localhost:3000
 
 **POST** `/api/importar-csv`
 
+- **Descrição**: Este endpoint importa boletos a partir de um arquivo `.csv`.
 - **Body**: Arquivo CSV no formato:
 
 ```csv
@@ -76,8 +82,9 @@ JOSE DA SILVA;17;182.54;123456123456123456
 
 **POST** `/api/processar-pdf`
 
+- **Descrição**: Este endpoint processa um arquivo PDF contendo boletos e os divide em arquivos individuais.
 - **Body**: PDF com 1 página por boleto (nomes dos sacados).
-- **Saída**: Gera arquivos individuais em `./boletos_gerados/` (ex: `1.pdf`).
+- **Saída**: Gera arquivos individuais em `./Arquivos_gerados/boletos/` (ex: `1.pdf`).
 
 ---
 
@@ -85,6 +92,7 @@ JOSE DA SILVA;17;182.54;123456123456123456
 
 **GET** `/api/boletos`
 
+- **Descrição**: Este endpoint retorna uma lista de boletos com filtros opcionais.
 - **Query Params**:
 
   - `nome`: Filtra por nome do sacado (parcial, case-insensitive).
@@ -121,13 +129,17 @@ GET /api/boletos?nome=JOSE&valor_inicial=100&id_lote=3
 
 **GET** `/api/relatorio?relatorio=1`
 
-- **Saída**: Salva em `./relatorios/relatorio_YYYY-MM-DD.pdf`.
-- **Retorna** o caminho do arquivo:
+- **Descrição**: Este endpoint gera um relatório em PDF com os boletos listados.
+- **Saída**: Salva em `./Arquivos_gerados/relatorios/relatorio_YYYY-MM-DD.pdf` e retorna o conteúdo em base64.
+
+- **Exemplo de Resposta**:
 
 ```json
 {
-  "path": "/caminho/relatorio_2025-04-11.pdf",
-  "filename": "relatorio_2025-04-11.pdf"
+  "success": true,
+  "message": "Relatório gerado com sucesso",
+  "filename": "relatorio_2025-04-11.pdf",
+  "base64": "..."
 }
 ```
 
@@ -144,20 +156,22 @@ src/
 
 ## 🧪 Testes Manuais
 
-Use a coleção do Postman ou os exemplos abaixo com `cURL`:
+Use a coleção do Postman para testar os endpoints. 
 
-Coleção do postman: "https://.postman.co/workspace/My-Workspace~1cb39973-368d-4a91-8717-f871dd02eaba/collection/20854740-b08823bc-302a-464c-87bf-d8774c926f70?action=share&creator=20854740"
+### Link da Coleção do Postman
+
+[Green Acesso API - Postman Collection](content/Green%20Acesso%20API.postman_collection.json)
+
+### Arquivo PDF Fake
+
+O arquivo `boletos-test.pdf` usado para testes está disponível em `content/boletos-test.pdf`.
 
 ### Exemplo com cURL
 
 ```bash
 # Importar CSV
-curl -X POST -F "csv=@boletos.csv" http://localhost:3000/api/importar-csv
+curl -X POST -F "csv=@content/test.csv" http://localhost:3000/api/importar-csv
 
 # Listar boletos filtrados
 curl "http://localhost:3000/api/boletos?nome=JOSE&valor_inicial=100"
 ```
-
-## 📄 Notas
-
-- **Banco de Dados**: As tabelas `lotes` e `boletos` são criadas automaticamente.
