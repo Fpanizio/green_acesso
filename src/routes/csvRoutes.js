@@ -4,7 +4,7 @@ const csvParser = require("csv-parser");
 const fs = require("fs");
 const path = require("path");
 const upload = require("../utils/upload");
-const { Lote, Boleto } = require("../models/Index"); // Importe ambos os modelos
+const { Lote, Boleto } = require("../models/Index");
 const logger = require("../config/logger");
 
 router.post("/importar-csv", upload.single("csv"), async (req, res) => {
