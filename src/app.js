@@ -7,6 +7,8 @@ const pdfRoutes = require("./routes/pdfRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const boletoRoutes = require("./routes/boletoRoute");
 
+logger.info("=========== INICIANDO NOVA EXECUÇÃO ===========");
+
 app.use(express.json());
 app.use("/api", csvRoutes);
 app.use("/api", pdfRoutes);
