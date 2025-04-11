@@ -87,8 +87,11 @@ router.get("/relatorio", async (req, res) => {
         res.json({
           success: true,
           message: "Relatório gerado com sucesso",
-          filename: filename,
-          base64: pdfBase64,
+          details: {
+            filename: filename,
+            base64: pdfBase64,
+            size: `${(Buffer.byteLength(pdfBase64, 'base64') / 1024)} KB`
+          }
         });
       });
 
