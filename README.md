@@ -144,7 +144,9 @@ src/
 
 ## 🧪 Testes Manuais
 
-Use a coleção do Postman anexa ou os exemplos abaixo com `cURL`:
+Use a coleção do Postman ou os exemplos abaixo com `cURL`:
+
+Coleção do postman: "https://.postman.co/workspace/My-Workspace~1cb39973-368d-4a91-8717-f871dd02eaba/collection/20854740-b08823bc-302a-464c-87bf-d8774c926f70?action=share&creator=20854740"
 
 ### Exemplo com cURL
 
