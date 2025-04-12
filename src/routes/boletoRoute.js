@@ -6,8 +6,8 @@ const logger = require("../config/logger");
 
 // Endpoint GET /boletos com filtros
 router.get('/boletos', async (req, res) => {
-  logger.info("Recebendo requisição para listar boletos.");
   try {
+    logger.info("Recebendo requisição para listar boletos.");
     const { nome, valor_inicial, valor_final, id_lote } = req.query;
 
     if (valor_inicial && isNaN(parseFloat(valor_inicial))) {
@@ -27,19 +27,16 @@ router.get('/boletos', async (req, res) => {
 
     const where = {};
 
-    // Filtro por nome (case-insensitive)
     if (nome) {
       where.nome_sacado = {
-        [Op.iLike]: `%${nome}%` // iLike para PostgreSQL (case-insensitive)
+        [Op.iLike]: `%${nome}%`
       };
     }
 
-    // Filtro por ID do lote
     if (id_lote) {
       where.id_lote = parseInt(id_lote);
     }
 
-    // Filtro por faixa de valor
     if (valor_inicial && valor_final) {
       where.valor = {
         [Op.between]: [
